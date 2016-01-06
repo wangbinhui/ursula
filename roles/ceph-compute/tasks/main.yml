@@ -40,3 +40,8 @@
 
 - name: set virsh secret
   shell: "virsh secret-set-value --secret {{ cinder_uuid_file.content | b64decode }} --base64 $(cat /etc/ceph/client.cinder.key)"
+  
+- name: copy ceph config for enabling rbd cache
+  synchronize: src=/etc/ceph/ceph.conf dest=/etc/ceph/ceph.conf
+  delegate_to: "{{ groups['ceph_monitors'][0] }}"
+  
