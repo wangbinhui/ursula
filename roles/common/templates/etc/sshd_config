@@ -25,7 +25,11 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 120
+{% if common.ssh.disable_root|bool %}
+PermitRootLogin no
+{% else %}
 PermitRootLogin without-password
+{% endif %}
 StrictModes yes
 
 RSAAuthentication yes
@@ -91,5 +95,13 @@ MACs hmac-sha1,hmac-ripemd160
 UsePAM yes
 
 PermitUserEnvironment no
+{% if common.ssh.max_auth_tries is defined %}
+MaxAuthTries {{ common.ssh.max_auth_tries }}
+{% else %}
 MaxAuthTries 5
+{% endif %}
 GatewayPorts no
+
+{% if common.ssh.disable_dns|bool %}
+UseDNS no
+{% endif %}
